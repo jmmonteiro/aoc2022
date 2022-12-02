@@ -1,16 +1,24 @@
 use crate::utils::{input, structs::Answer};
 use std::collections::BTreeSet;
-use std::time::Instant;
-pub fn solve() {
+use std::time::{Duration, Instant};
+pub fn solve() -> Duration {
     let vec = input::read_file("inputs/day01.txt");
+    let mut total_time = Duration::new(0, 0);
     match part1(&vec) {
-        Some(i) => i.display(),
+        Some(i) => {
+            total_time += i.time;
+            i.display();
+        }
         None => println!("No answer found for part 1."),
     };
     match part2(&vec) {
-        Some(i) => i.display(),
+        Some(i) => {
+            total_time += i.time;
+            i.display();
+        }
         None => println!("No answer found for part 2."),
     };
+    total_time
 }
 
 fn part1(vec: &Vec<String>) -> Option<Answer> {
@@ -31,7 +39,11 @@ fn part1(vec: &Vec<String>) -> Option<Answer> {
         }
     }
 
-    return Some(Answer::new("1.1", (max_calories).to_string(), time));
+    return Some(Answer::new(
+        "1.1",
+        (max_calories).to_string(),
+        time.elapsed(),
+    ));
 }
 
 fn part2(vec: &Vec<String>) -> Option<Answer> {
@@ -58,6 +70,6 @@ fn part2(vec: &Vec<String>) -> Option<Answer> {
     return Some(Answer::new(
         "1.2",
         (max_calories.iter().sum::<i32>()).to_string(),
-        time,
+        time.elapsed(),
     ));
 }

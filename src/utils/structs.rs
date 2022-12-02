@@ -1,4 +1,4 @@
-use std::time::{Duration, Instant};
+use std::time::Duration;
 pub struct Answer<'a> {
     pub prob_number: &'a str,
     pub answer: String,
@@ -6,11 +6,11 @@ pub struct Answer<'a> {
 }
 
 impl<'a> Answer<'a> {
-    pub fn new(prob_number: &'a str, answer: String, time: Instant) -> Answer {
+    pub fn new(prob_number: &'a str, answer: String, time: Duration) -> Answer {
         Answer {
             prob_number,
             answer,
-            time: time.elapsed(),
+            time,
         }
     }
     pub fn display(&self) {
