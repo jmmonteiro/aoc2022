@@ -7,6 +7,7 @@ fn main() {
     println!("--- Day 01 ---");
     total_time += days::day01::solve();
     println!("--- Day 02 ---");
+    total_time += days::day02::solve();
 
     println!(
         "Total solve time: {} s",
