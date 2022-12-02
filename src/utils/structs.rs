@@ -1,3 +1,4 @@
+use crate::utils::input;
 use std::time::Duration;
 pub struct Answer<'a> {
     pub prob_number: &'a str,
@@ -50,4 +51,29 @@ impl<'a> Answer<'a> {
             );
         }
     }
+}
+
+pub trait Solver {
+    fn solve(&self, filepath: &str) -> Duration {
+        let vec = input::read_file(filepath);
+        let mut total_time = Duration::new(0, 0);
+        match self.part1(&vec) {
+            Some(i) => {
+                total_time += i.time;
+                i.display();
+            }
+            None => println!("No answer found for part 1."),
+        };
+        match self.part2(&vec) {
+            Some(i) => {
+                total_time += i.time;
+                i.display();
+            }
+            None => println!("No answer found for part 2."),
+        };
+        total_time
+    }
+
+    fn part1(&self, vec: &Vec<String>) -> Option<Answer>;
+    fn part2(&self, vec: &Vec<String>) -> Option<Answer>;
 }
