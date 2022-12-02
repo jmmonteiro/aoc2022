@@ -1,7 +1,9 @@
-use crate::utils::{input, structs::Answer};
+use crate::utils::structs::Answer;
 use std::time::{Duration, Instant};
 pub fn solve() -> Duration {
-    let vec = input::read_file("inputs/day02.txt");
+    let vec = include_str!("../../inputs/day02.txt")
+        .lines()
+        .collect::<Vec<&str>>();
     let mut total_time = Duration::new(0, 0);
     match part1(&vec) {
         Some(i) => {
@@ -20,7 +22,7 @@ pub fn solve() -> Duration {
     total_time
 }
 
-fn part1(vec: &Vec<String>) -> Option<Answer> {
+fn part1<'a>(vec: &'a Vec<&'a str>) -> Option<Answer<'a>> {
     let time = Instant::now();
     fn map(mine: char) -> char {
         match mine {
@@ -73,7 +75,7 @@ fn part1(vec: &Vec<String>) -> Option<Answer> {
     ));
 }
 
-fn part2(vec: &Vec<String>) -> Option<Answer> {
+fn part2<'a>(vec: &'a Vec<&'a str>) -> Option<Answer<'a>> {
     let time = Instant::now();
     let mut total_score: u32 = 0;
     for l in vec {
