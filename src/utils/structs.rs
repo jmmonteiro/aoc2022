@@ -1,53 +1,39 @@
 use crate::utils::input;
+use regex::Regex;
 use std::time::Duration;
-pub struct Answer<'a> {
-    pub prob_number: &'a str,
+pub struct Answer {
     pub answer: String,
     pub time: Duration,
 }
 
-impl<'a> Answer<'a> {
-    pub fn new(prob_number: &'a str, answer: String, time: Duration) -> Answer {
-        Answer {
-            prob_number,
-            answer,
-            time,
-        }
+impl Answer {
+    pub fn new(answer: String, time: Duration) -> Answer {
+        Answer { answer, time }
     }
     pub fn display(&self) {
-        fn p(time: String, unit: &str, prob_number: &str, answer: &str) {
-            println!(
-                "(runtime: {} {})\t Problem {}:\t {}",
-                time, unit, prob_number, answer,
-            );
-        }
         if self.time.as_secs() > 0 {
-            p(
-                self.time.as_secs().to_string(),
-                "s",
-                self.prob_number,
+            println!(
+                "{}\t(runtime: {} s)",
                 &self.answer,
+                self.time.as_secs().to_string(),
             );
         } else if self.time.as_millis() > 0 {
-            p(
-                self.time.as_millis().to_string(),
-                "ms",
-                self.prob_number,
+            println!(
+                "{}\t(runtime: {} ms)",
                 &self.answer,
+                self.time.as_millis().to_string(),
             );
         } else if self.time.as_micros() > 0 {
-            p(
-                self.time.as_micros().to_string(),
-                "μs",
-                self.prob_number,
+            println!(
+                "{}\t(runtime: {} μs)",
                 &self.answer,
+                self.time.as_micros().to_string(),
             );
         } else {
-            p(
-                self.time.as_nanos().to_string(),
-                "ns",
-                self.prob_number,
+            println!(
+                "{}\t(runtime: {} ns)",
                 &self.answer,
+                self.time.as_nanos().to_string(),
             );
         }
     }
@@ -55,11 +41,17 @@ impl<'a> Answer<'a> {
 
 pub trait Solver {
     fn solve(&self, filepath: &str) -> Duration {
+        let re = Regex::new(r"day(\d+).txt").unwrap();
+        let cap = re.captures(filepath).unwrap();
+        assert!(cap.len() == 2);
+        println!("------------- Day {} -------------", &cap[1]);
+
         let vec = input::read_file(filepath);
         let mut total_time = Duration::new(0, 0);
         match self.part1(&vec) {
             Some(i) => {
                 total_time += i.time;
+                print!("Part 1:\t");
                 i.display();
             }
             None => println!("No answer found for part 1."),
@@ -67,10 +59,12 @@ pub trait Solver {
         match self.part2(&vec) {
             Some(i) => {
                 total_time += i.time;
+                print!("Part 2:\t");
                 i.display();
             }
             None => println!("No answer found for part 2."),
         };
+        println!("");
         total_time
     }
     #[allow(unused)]

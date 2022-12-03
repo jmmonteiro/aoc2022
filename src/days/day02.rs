@@ -50,11 +50,7 @@ impl Solver for Day {
                 _ => panic!("{} is not a valid move for the first column.", mine),
             }
         }
-        return Some(Answer::new(
-            "2.1",
-            (total_score).to_string(),
-            time.elapsed(),
-        ));
+        return Some(Answer::new((total_score).to_string(), time.elapsed()));
     }
 
     fn part2(&self, vec: &Vec<String>) -> Option<Answer> {
@@ -104,10 +100,6 @@ impl Solver for Day {
                 _ => {}
             }
         }
-        return Some(Answer::new(
-            "2.2",
-            (total_score).to_string(),
-            time.elapsed(),
-        ));
+        return Some(Answer::new((total_score).to_string(), time.elapsed()));
     }
 }

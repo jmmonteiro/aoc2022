@@ -23,11 +23,7 @@ impl Solver for Day {
             }
         }
 
-        return Some(Answer::new(
-            "1.1",
-            (max_calories).to_string(),
-            time.elapsed(),
-        ));
+        return Some(Answer::new((max_calories).to_string(), time.elapsed()));
     }
 
     fn part2(&self, vec: &Vec<String>) -> Option<Answer> {
@@ -52,7 +48,6 @@ impl Solver for Day {
         }
 
         return Some(Answer::new(
-            "1.2",
             (max_calories.iter().sum::<i32>()).to_string(),
             time.elapsed(),
         ));

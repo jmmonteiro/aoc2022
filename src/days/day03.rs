@@ -31,11 +31,7 @@ impl Solver for Day {
             }
         }
 
-        return Some(Answer::new(
-            "3.1",
-            (total_score).to_string(),
-            time.elapsed(),
-        ));
+        return Some(Answer::new((total_score).to_string(), time.elapsed()));
     }
 
     fn part2(&self, vec: &Vec<String>) -> Option<Answer> {
@@ -65,10 +61,6 @@ impl Solver for Day {
             total_score += score_map[&common_item[0]] as u32;
         }
 
-        return Some(Answer::new(
-            "3.2",
-            (total_score).to_string(),
-            time.elapsed(),
-        ));
+        return Some(Answer::new((total_score).to_string(), time.elapsed()));
     }
 }
