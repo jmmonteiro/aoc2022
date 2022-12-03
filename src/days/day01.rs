@@ -53,3 +53,19 @@ impl Solver for Day {
         ));
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::days::day01::*;
+    use crate::utils::input;
+    #[test]
+    fn part1() {
+        let vec = input::read_file("inputs/day01.txt");
+        assert_eq!(Day.part1(&vec).unwrap().answer, "72511")
+    }
+    #[test]
+    fn part2() {
+        let vec = input::read_file("inputs/day01.txt");
+        assert_eq!(Day.part2(&vec).unwrap().answer, "212117")
+    }
+}

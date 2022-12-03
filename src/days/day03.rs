@@ -64,3 +64,19 @@ impl Solver for Day {
         return Some(Answer::new((total_score).to_string(), time.elapsed()));
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::days::day03::*;
+    use crate::utils::input;
+    #[test]
+    fn part1() {
+        let vec = input::read_file("inputs/day03.txt");
+        assert_eq!(Day.part1(&vec).unwrap().answer, "8394")
+    }
+    #[test]
+    fn part2() {
+        let vec = input::read_file("inputs/day03.txt");
+        assert_eq!(Day.part2(&vec).unwrap().answer, "2413")
+    }
+}

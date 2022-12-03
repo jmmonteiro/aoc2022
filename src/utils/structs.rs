@@ -51,7 +51,7 @@ pub trait Solver {
         match self.part1(&vec) {
             Some(i) => {
                 total_time += i.time;
-                print!("Part 1:\t");
+                print!(" Part 1: ");
                 i.display();
             }
             None => println!("No answer found for part 1."),
@@ -59,7 +59,7 @@ pub trait Solver {
         match self.part2(&vec) {
             Some(i) => {
                 total_time += i.time;
-                print!("Part 2:\t");
+                print!(" Part 2: ");
                 i.display();
             }
             None => println!("No answer found for part 2."),

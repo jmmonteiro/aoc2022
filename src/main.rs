@@ -12,7 +12,7 @@ fn main() {
     total_time += days::day03::Day.solve("inputs/day03.txt");
 
     println!(
-        "\nTotal algorithm solve time (excludes data reading time): {} s\n",
+        "Total algorithm solve time (excludes data reading time): {} s\n",
         (total_time.as_nanos() as f32) / (i32::pow(10, 9) as f32)
     );
 }
