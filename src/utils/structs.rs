@@ -73,7 +73,12 @@ pub trait Solver {
         };
         total_time
     }
-
-    fn part1(&self, vec: &Vec<String>) -> Option<Answer>;
-    fn part2(&self, vec: &Vec<String>) -> Option<Answer>;
+    #[allow(unused)]
+    fn part1(&self, vec: &Vec<String>) -> Option<Answer> {
+        None
+    }
+    #[allow(unused)]
+    fn part2(&self, vec: &Vec<String>) -> Option<Answer> {
+        None
+    }
 }
