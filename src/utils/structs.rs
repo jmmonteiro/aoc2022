@@ -62,7 +62,7 @@ pub trait Solver {
                 print!(" Part 2: ");
                 i.display();
             }
-            None => println!("No answer found for part 2."),
+            None => println!(" No answer found for part 2."),
         };
         println!("");
         total_time
