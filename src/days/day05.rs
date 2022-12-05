@@ -8,7 +8,7 @@ pub struct Day;
 impl Solver for Day {
     fn part1(&self, vec: &Vec<String>) -> Option<Answer> {
         let time = Instant::now();
-        let re_pos = Regex::new(r"(\d).*(\d).*(\d).*(\d).*(\d).*(\d).*(\d).*(\d).*(\d).*").unwrap();
+        let re_pos = Regex::new(r"\s{2,}(\d+)\s{2,}").unwrap();
         let re_moves = Regex::new(r"move (\d+) from (\d) to (\d)").unwrap();
         let mut idx_pos: usize = 0;
         let mut idx_moves: usize = 0;
@@ -27,14 +27,15 @@ impl Solver for Day {
         let moves = &vec[idx_moves..vec.len()];
 
         let mut map_positions: HashMap<usize, usize> = HashMap::new(); // <position in string, column number>
-        let caps = re_pos.captures(&vec[idx_pos]).unwrap();
-        for i in 1..10 {
-            map_positions.insert(caps.get(i).unwrap().start(), i);
+        let caps = Regex::new(r"(\d+)").unwrap();
+        let caps = caps.find_iter(&vec[idx_pos]);
+        for (i, c) in caps.enumerate() {
+            map_positions.insert(c.start(), i + 1);
         }
 
         // Read in initial statelet tmp =
         let mut crates_hashmap: HashMap<usize, Vec<char>> = HashMap::new(); // column number , vector of crates
-        for i in 1..10 {
+        for i in 1..(map_positions.len() + 1) {
             crates_hashmap.insert(i, Vec::new());
         }
         for l in crates.iter().rev() {
@@ -64,7 +65,7 @@ impl Solver for Day {
 
         // Format result
         let mut output = String::new();
-        for idx in 1..10 {
+        for idx in 1..(map_positions.len() + 1) {
             output.push(
                 crates_hashmap
                     .get_mut(&(idx as usize))
@@ -79,7 +80,7 @@ impl Solver for Day {
 
     fn part2(&self, vec: &Vec<String>) -> Option<Answer> {
         let time = Instant::now();
-        let re_pos = Regex::new(r"(\d).*(\d).*(\d).*(\d).*(\d).*(\d).*(\d).*(\d).*(\d).*").unwrap();
+        let re_pos = Regex::new(r"\s{2,}(\d+)\s{2,}").unwrap();
         let re_moves = Regex::new(r"move (\d+) from (\d) to (\d)").unwrap();
         let mut idx_pos: usize = 0;
         let mut idx_moves: usize = 0;
@@ -98,14 +99,15 @@ impl Solver for Day {
         let moves = &vec[idx_moves..vec.len()];
 
         let mut map_positions: HashMap<usize, usize> = HashMap::new(); // <position in string, column number>
-        let caps = re_pos.captures(&vec[idx_pos]).unwrap();
-        for i in 1..10 {
-            map_positions.insert(caps.get(i).unwrap().start(), i);
+        let caps = Regex::new(r"(\d+)").unwrap();
+        let caps = caps.find_iter(&vec[idx_pos]);
+        for (i, c) in caps.enumerate() {
+            map_positions.insert(c.start(), i + 1);
         }
 
         // Read in initial statelet tmp =
         let mut crates_hashmap: HashMap<usize, Vec<char>> = HashMap::new(); // column number , vector of crates
-        for i in 1..10 {
+        for i in 1..(map_positions.len() + 1) {
             crates_hashmap.insert(i, Vec::new());
         }
         for l in crates.iter().rev() {
@@ -139,7 +141,7 @@ impl Solver for Day {
 
         // Format result
         let mut output = String::new();
-        for idx in 1..10 {
+        for idx in 1..(map_positions.len() + 1) {
             output.push(
                 crates_hashmap
                     .get_mut(&(idx as usize))
