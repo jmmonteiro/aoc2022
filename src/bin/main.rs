@@ -1,8 +1,7 @@
-mod days;
-mod utils;
+use aoc2022::days;
 use std::time::{Duration, Instant};
 
-use crate::utils::structs::Solver;
+use aoc2022::utils::structs::Solver;
 fn main() {
     let time = Instant::now();
     let mut total_algo_time = Duration::new(0, 0);
