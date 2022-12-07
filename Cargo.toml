@@ -8,7 +8,7 @@ regex = "1"
 itertools = "0.10.5"
 
 [dev-dependencies]
-criterion = "0.4.0"
+criterion = { version = "0.4.0", features = ["html_reports"] }
 
 [[bench]]
 name = "aoc_benchmarks"
