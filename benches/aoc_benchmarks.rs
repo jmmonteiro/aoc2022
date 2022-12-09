@@ -84,4 +84,30 @@ criterion_group! {
     targets = all_days_benchmark
 }
 
-criterion_main!(all_days);
+// --- Alternative implementations
+pub fn day6_benchmark(c: &mut Criterion) {
+    let mut group = c.benchmark_group("Day 6 - Comparissons");
+
+    let vec = read_file("inputs/day06.txt");
+    group.bench_function("Day 6 : Part 1", |b| {
+        b.iter(|| day06::Day.part1(black_box(&vec)))
+    });
+    group.bench_function("Day 6 : Part 2", |b| {
+        b.iter(|| day01::Day.part2(black_box(&vec)))
+    });
+
+    group.bench_function("Day 6 : Part 1 (using collect)", |b| {
+        b.iter(|| day06::old_implementation_collect::part1(black_box(&vec)))
+    });
+    group.bench_function("Day 6 : Part 2 (using collect)", |b| {
+        b.iter(|| day06::old_implementation_collect::part2(black_box(&vec)))
+    });
+}
+
+criterion_group! {
+    name = day6;
+    config = Criterion::default().significance_level(0.01).sample_size(500);
+    targets = day6_benchmark
+}
+
+criterion_main!(all_days, day6);
