@@ -155,7 +155,7 @@ fn build_filesystem(vec: &Vec<String>) -> FileSystem {
 
 impl Solver for Day {
     /// Solution partly inspired by this blogpost from 2019
-    /// https://dev.to/deciduously/no-more-tears-no-more-knots-arena-allocated-trees-in-rust-44k6
+    /// <https://dev.to/deciduously/no-more-tears-no-more-knots-arena-allocated-trees-in-rust-44k6>
 
     fn part1(&self, vec: &Vec<String>) -> Option<Answer> {
         let time = Instant::now();
