@@ -77,6 +77,8 @@ pub fn all_days_benchmark(c: &mut Criterion) {
     group.bench_function("Day 9 : Part 2", |b| {
         b.iter(|| day09::Day.part2(black_box(&vec)))
     });
+
+    group.finish();
 }
 criterion_group! {
     name = all_days;
@@ -89,19 +91,17 @@ pub fn day6_benchmark(c: &mut Criterion) {
     let mut group = c.benchmark_group("Day 6 - Comparissons");
 
     let vec = read_file("inputs/day06.txt");
-    group.bench_function("Day 6 : Part 1", |b| {
-        b.iter(|| day06::Day.part1(black_box(&vec)))
-    });
-    group.bench_function("Day 6 : Part 2", |b| {
-        b.iter(|| day01::Day.part2(black_box(&vec)))
-    });
+    group.bench_function("Part 1", |b| b.iter(|| day06::Day.part1(black_box(&vec))));
+    group.bench_function("Part 2", |b| b.iter(|| day01::Day.part2(black_box(&vec))));
 
-    group.bench_function("Day 6 : Part 1 (using collect)", |b| {
+    group.bench_function("Part 1 (using collect)", |b| {
         b.iter(|| day06::old_implementation_collect::part1(black_box(&vec)))
     });
-    group.bench_function("Day 6 : Part 2 (using collect)", |b| {
+    group.bench_function("Part 2 (using collect)", |b| {
         b.iter(|| day06::old_implementation_collect::part2(black_box(&vec)))
     });
+
+    group.finish();
 }
 
 criterion_group! {
