@@ -59,6 +59,14 @@ pub fn benchmarks(c: &mut Criterion) {
     c.bench_function("day07_part2", |b| {
         b.iter(|| day07::Day.part2(black_box(&vec)))
     });
+
+    let vec = read_file("inputs/day08.txt");
+    c.bench_function("day08_part1", |b| {
+        b.iter(|| day08::Day.part1(black_box(&vec)))
+    });
+    c.bench_function("day08_part2", |b| {
+        b.iter(|| day08::Day.part2(black_box(&vec)))
+    });
 }
 criterion_group!(benches, benchmarks);
 criterion_main!(benches);
