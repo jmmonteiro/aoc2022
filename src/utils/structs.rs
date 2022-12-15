@@ -54,7 +54,7 @@ pub trait Solver {
                 print!(" Part 1: ");
                 i.display();
             }
-            None => println!("No answer found for part 1."),
+            None => println!(" No answer found for part 1."),
         };
         match self.part2(&vec) {
             Some(i) => {

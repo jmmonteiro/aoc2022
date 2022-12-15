@@ -124,7 +124,8 @@ impl Solver for Day {
             monkeys.round();
         }
 
-        return Some(Answer::new(("test").to_string(), time.elapsed()));
+        //return Some(Answer::new(("test").to_string(), time.elapsed()));
+        None
     }
 }
 
