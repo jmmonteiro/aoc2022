@@ -1,5 +1,5 @@
 use crate::utils::structs::{Answer, Solver};
-use std::time::Instant;
+//use std::time::Instant;
 
 pub struct Day;
 
@@ -64,8 +64,8 @@ impl MonkeyGang {
 }
 
 impl Solver for Day {
-    fn part1(&self, vec: &Vec<String>) -> Option<Answer> {
-        let time = Instant::now();
+    fn part1(&self, _vec: &Vec<String>) -> Option<Answer> {
+        //        let time = Instant::now();
 
         let mut monkeys = MonkeyGang::new([
             Monkey::new(
