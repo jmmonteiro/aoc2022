@@ -1,4 +1,5 @@
 use crate::utils::structs::{Answer, Solver};
+use rand::seq::SliceRandom;
 use std::{collections::HashMap, time::Instant};
 
 pub struct Day;
@@ -69,48 +70,69 @@ impl Map {
         }
     }
 
-    fn get_next_step(&self, path: &Vec<(usize, usize)>) -> Option<(usize, usize)> {
+    fn get_next_step(&mut self, path: &Vec<(usize, usize)>) -> Option<(usize, usize)> {
         let last_node = path.last().unwrap();
 
-        let mut backup_path = self.init_pos;
+        if self.map[last_node.0][last_node.1].accesible.len() == 0 {
+            return None;
+        }
+
+        let mut candidates = vec![];
         let mut last_exp = std::usize::MAX;
-        for v in self.map[last_node.0][last_node.1].accesible.iter() {
+        let mut rm_idx = vec![];
+
+        for (i, v) in self.map[last_node.0][last_node.1]
+            .accesible
+            .iter()
+            .enumerate()
+        {
             if path.contains(v) {
                 continue;
             }
             let new_n = &self.map[v.0][v.1];
             if new_n.is_blocked {
+                rm_idx.push(i);
                 continue;
             }
-            if new_n.shortest_path < self.map[last_node.0][last_node.1].shortest_path {
-                return Some(*v);
-            }
-            if (new_n.shortest_path == self.map[last_node.0][last_node.1].shortest_path)
-                && new_n.last_explored < last_exp
-            {
-                backup_path = *v;
+            if new_n.last_explored <= last_exp {
+                candidates.push(*v);
                 last_exp = new_n.last_explored;
             }
         }
 
-        if backup_path == self.init_pos {
+        // Remove blocked idx from search
+        if !rm_idx.is_empty() {
+            let mut new_access = vec![];
+            for (i, n) in self.map[last_node.0][last_node.1]
+                .accesible
+                .iter()
+                .enumerate()
+            {
+                if !rm_idx.contains(&i) {
+                    new_access.push(*n);
+                }
+            }
+            self.map[last_node.0][last_node.1].accesible = new_access;
+        }
+
+        if candidates.is_empty() {
             return None;
         }
-        return Some(backup_path);
+
+        return Some(*candidates.choose(&mut rand::thread_rng()).unwrap());
     }
 
     fn search(&mut self) -> u16 {
         let mut shortest_path = std::u16::MAX;
-        for itr in 0..10000 {
+        for itr in 0..1000000 {
             let mut stop = false;
             let mut current_path = vec![self.init_pos];
             while !stop {
                 match self.get_next_step(&current_path) {
                     Some(p) => {
                         current_path.push(p);
-                        self.map[p.0][p.1].last_explored = itr;
                         if p == self.final_pos {
-                            let final_len = current_path.len() as u16;
+                            let final_len = (current_path.len() - 1) as u16;
                             if final_len < shortest_path {
                                 shortest_path = final_len;
                             }
@@ -121,11 +143,15 @@ impl Map {
                             }
 
                             stop = true;
+                        } else {
+                            self.map[p.0][p.1].last_explored = itr;
                         }
                     }
                     None => {
                         let n = current_path.last().unwrap();
-                        self.map[n.0][n.1].is_blocked = true;
+                        if self.map[n.0][n.1].accesible.is_empty() {
+                            self.map[n.0][n.1].is_blocked = true;
+                        }
                         stop = true;
                     }
                 }
@@ -194,7 +220,12 @@ impl Solver for Day {
         h_map.get_init_pos();
         h_map.get_final_pos(final_val);
 
-        return Some(Answer::new((h_map.search()).to_string(), time.elapsed()));
+        let ans = h_map.search();
+        if ans == std::u16::MAX {
+            return None;
+        }
+
+        Some(Answer::new(ans.to_string(), time.elapsed()))
     }
 }
 
