@@ -41,10 +41,10 @@ impl Answer {
 
 pub trait Solver {
     fn solve(&self, filepath: &str) -> Duration {
-        let re = Regex::new(r"day(\d+).txt").unwrap();
-        let cap = re.captures(filepath).unwrap();
-        assert!(cap.len() == 2);
-        println!("------------- Day {} -------------", &cap[1]);
+        //        let re = Regex::new(r"day(\d+).txt").unwrap();
+        //        let cap = re.captures(filepath).unwrap();
+        //        assert!(cap.len() == 2);
+        //        println!("------------- Day {} -------------", &cap[1]);
 
         let vec = input::read_file(filepath);
         let mut total_time = Duration::new(0, 0);
