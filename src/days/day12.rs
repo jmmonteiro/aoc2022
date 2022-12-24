@@ -4,6 +4,12 @@ use std::{collections::HashMap, time::Instant};
 
 pub struct Day;
 
+pub fn argsort<T: Ord>(data: &[T]) -> Vec<usize> {
+    let mut indices = (0..data.len()).collect::<Vec<_>>();
+    indices.sort_by_key(|&i| &data[i]);
+    indices
+}
+
 pub struct Map {
     pub map: Vec<Vec<Node>>,
     pub init_pos: (usize, usize),
@@ -35,10 +41,24 @@ impl Map {
             for j in 0..self.map[0].len() {
                 if self.map[i][j].value == final_val {
                     self.final_pos = (i, j);
-                    return self.final_pos;
+                    break;
                 }
             }
+            if self.final_pos != (0, 0) {
+                break;
+            };
         }
+
+        // Compute distance from each point to end
+        for (i, r) in self.map.iter_mut().enumerate() {
+            for (j, c) in r.iter_mut().enumerate() {
+                c.distance_to_end = (10000.0
+                    * (f32::powf((i as f32) - (self.final_pos.0 as f32), 2.0)
+                        + f32::powf((j as f32) - (self.final_pos.1 as f32), 2.0)))
+                    as usize;
+            }
+        }
+
         self.final_pos
     }
 
@@ -73,53 +93,39 @@ impl Map {
     fn get_next_step(&mut self, path: &Vec<(usize, usize)>) -> Option<(usize, usize)> {
         let last_node = path.last().unwrap();
 
-        if self.map[last_node.0][last_node.1].accesible.len() == 0 {
+        if self.map[last_node.0][last_node.1].accesible.is_empty() {
             return None;
         }
 
         let mut candidates = vec![];
-        let mut last_exp = std::usize::MAX;
-        let mut rm_idx = vec![];
+        let mut distances = vec![];
 
-        for (i, v) in self.map[last_node.0][last_node.1]
-            .accesible
-            .iter()
-            .enumerate()
-        {
+        for v in self.map[last_node.0][last_node.1].accesible.iter() {
             if path.contains(v) {
                 continue;
             }
             let new_n = &self.map[v.0][v.1];
             if new_n.is_blocked {
-                rm_idx.push(i);
                 continue;
             }
-            if new_n.last_explored <= last_exp {
-                candidates.push(*v);
-                last_exp = new_n.last_explored;
-            }
-        }
-
-        // Remove blocked idx from search
-        if !rm_idx.is_empty() {
-            let mut new_access = vec![];
-            for (i, n) in self.map[last_node.0][last_node.1]
-                .accesible
-                .iter()
-                .enumerate()
-            {
-                if !rm_idx.contains(&i) {
-                    new_access.push(*n);
-                }
-            }
-            self.map[last_node.0][last_node.1].accesible = new_access;
+            candidates.push(*v);
+            distances.push(new_n.distance_to_end);
         }
 
         if candidates.is_empty() {
             return None;
         }
 
-        return Some(*candidates.choose(&mut rand::thread_rng()).unwrap());
+        // Bias candidates towards the closest to the end
+        let mut final_candidates: Vec<(usize, usize)> = vec![];
+        let sort_order = argsort(&distances);
+        for (n_rep, idx) in sort_order.iter().rev().enumerate() {
+            for _ in 0..usize::pow(n_rep + 1, 2) {
+                final_candidates.push(candidates[*idx].clone());
+            }
+        }
+
+        return Some(*final_candidates.choose(&mut rand::thread_rng()).unwrap());
     }
 
     fn search(&mut self) -> u16 {
@@ -128,6 +134,9 @@ impl Map {
             let mut stop = false;
             let mut current_path = vec![self.init_pos];
             while !stop {
+                if (current_path.len() as u16) - 1 >= shortest_path {
+                    break;
+                }
                 match self.get_next_step(&current_path) {
                     Some(p) => {
                         current_path.push(p);
@@ -152,6 +161,15 @@ impl Map {
                         if self.map[n.0][n.1].accesible.is_empty() {
                             self.map[n.0][n.1].is_blocked = true;
                         }
+
+                        if self.map[n.0][n.1]
+                            .accesible
+                            .iter()
+                            .all(|x| self.map[x.0][x.1].is_blocked)
+                        {
+                            self.map[n.0][n.1].is_blocked = true;
+                        }
+
                         stop = true;
                     }
                 }
@@ -169,6 +187,7 @@ pub struct Node {
     pub last_explored: usize,
     pub value: i8,
     pub accesible: Vec<(usize, usize)>, // (y, x)
+    pub distance_to_end: usize, // this will be squared, but it's indifferent for what we're doing
 }
 
 impl Node {
@@ -186,6 +205,7 @@ impl Node {
             last_explored,
             value,
             accesible: vec![], // (y, x)
+            distance_to_end: 0,
         }
     }
 }
@@ -222,6 +242,12 @@ impl Solver for Day {
 
         let ans = h_map.search();
         if ans == std::u16::MAX {
+            for r in h_map.map {
+                for c in r {
+                    print!("{}", (c.last_explored > 0) as u8);
+                }
+                println!("")
+            }
             return None;
         }
 
